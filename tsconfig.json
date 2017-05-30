@@ -1,0 +1,22 @@
+{
+    "version": "2.3.3",
+    "compilerOptions": {
+        "declaration": true,
+        "experimentalDecorators": true,
+        "jsx": "react",
+        "lib": [
+            "es2015"
+        ],
+        "module": "commonjs",
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "outDir": "dist",
+        "sourceMap": false,
+        "strict": true,
+        "target": "es5"
+    },
+    "exclude": [
+        "dist/**/*.d.ts", "node_modules/**/*.ts"
+    ]
+}
