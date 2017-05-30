@@ -1,6 +1,6 @@
 export type EventType = "createUser" | "createGroup" | "deleteIdentity" | "addIdentityToGroup";
 
-export type Event = ICreateUserEvent | ICreateGroupEvent | IDeleteIdentityEvent | IAddIdentityToGroupEvent;
+export type Event = ICreateUserEvent | ICreateGroupEvent | IAddIdentityToGroupEvent;
 
 
 export /* abstract */ interface IEvent {
@@ -22,12 +22,6 @@ export interface ICreateUserEvent extends ICreateIdentityEvent {
 
 export interface ICreateGroupEvent extends ICreateIdentityEvent {
     eventType: "createGroup";
-}
-
-
-export interface IDeleteIdentityEvent extends IEvent {
-    eventType: "deleteIdentity";
-    id: string;
 }
 
 export interface IAddIdentityToGroupEvent extends IEvent {

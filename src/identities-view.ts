@@ -1,3 +1,5 @@
+import {keys} from "lodash";
+
 import {Event} from "./events";
 
 
@@ -33,19 +35,16 @@ export class Identities {
 
     private identities: { [id: string]: Identity } = {};
 
+    constructor(serialisedIdentities: Identity[] = []) {
+        for (const identity of serialisedIdentities) {
+            this.identities[identity.id] = identity;
+        }
+    }
+
     processEvent(event: Event): void {
         switch (event.eventType) {
-            case "createUser": {
-                const user: IUser = {
-                    id: event.id,
-                    identityType: "user",
-                    name: event.name,
-                    publicId: event.publicId,
-                    emailAddress: event.emailAddress,
-                    hashedPassword: event.hashedPassword,
-                    permissions: {}
-                };
-                this.identities[event.id] = user;
+            case "addIdentityToGroup": {
+                (this.identities[event.groupId] as IGroup).members[event.memberId] = event.asAdmin;
                 break;
             }
             case "createGroup": {
@@ -60,16 +59,53 @@ export class Identities {
                 this.identities[event.id] = group;
                 break;
             }
-            case "deleteIdentity": {
-                delete this.identities[event.id];
-                break;
-            }
-            case "addIdentityToGroup": {
-                (this.identities[event.groupId] as IGroup).members[event.memberId] = event.asAdmin;
+            case "createUser": {
+                const user: IUser = {
+                    id: event.id,
+                    identityType: "user",
+                    name: event.name,
+                    publicId: event.publicId,
+                    emailAddress: event.emailAddress,
+                    hashedPassword: event.hashedPassword,
+                    permissions: {}
+                };
+                this.identities[event.id] = user;
                 break;
             }
         }
     }
+
+    byId(id: string): Identity | undefined {
+        return this.identities[id];
+    }
+
+    userByEmailAddress(emailAddress: string): IUser | undefined {
+        const id = keys(this.identities).find(identityId => {
+            const identity = this.byId(identityId)!;
+            switch (identity.identityType) {
+                case "user": return identity.emailAddress === emailAddress;
+                default: return false;
+            }
+        });
+        return id === undefined ? undefined : this.byId(id) as IUser;
+    }
+
+    circularAfterAdding(groupId: string, memberId: string): boolean {
+        const visited: { [id: string]: boolean } = {};
+        const self = this;
+        function inCycle(id: string): boolean {
+            if (id in visited) {
+                return true;
+            }
+            visited[id] = true;
+            const identity = self.byId(id)!;
+            return (identity.identityType === "group")
+                ? (id === groupId ? inCycle(memberId) : false) || keys(identity.members).some(inCycle)
+                : false;
+        }
+        return keys(self.identities).some(inCycle);
+    }
+    // TODO  unit test this...
 
 }
 

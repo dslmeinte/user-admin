@@ -16,9 +16,11 @@
   "author": "Meinte Boersma",
   "license": "Apache-2.0",
   "dependencies": {
+    "lodash": "^4.17.4",
     "uuid": "^3.0.1"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.64",
     "@types/uuid": "^2.0.29",
     "rimraf": "^2.6.1",
     "typescript": "^2.3.3"
