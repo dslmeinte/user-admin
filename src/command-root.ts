@@ -26,6 +26,7 @@ function error(...errorMessages: string[]): ICommandResult {
 
 
 export async function processCommand(identities: Identities, command: Command): Promise<ICommandResult> {
+    // TODO  syntax of command should already have happened at this point
     const syntaxIssues = validateSyntax(command);
     if (syntaxIssues.length > 0) {
         return error(...syntaxIssues);
@@ -50,30 +51,27 @@ export async function processCommand(identities: Identities, command: Command): 
                     eventType: "addIdentityToGroup",
                     timestamp: now(),
                     groupId: command.groupId,
-                    memberId: command.memberId,
-                    asAdmin: command.asAdmin
+                    memberId: command.memberId
                 } as IAddIdentityToGroupEvent);
         }
         case "createGroup": {
-            // TODO  validate (unicity of) publicId?
+            // TODO  validate non-emptyness of name
             return success({
                     eventType: "createGroup",
                     id: v4(),
                     timestamp: now(),
-                    name: command.name,
-                    publicId: command.publicId
+                    name: command.name
                 } as ICreateGroupEvent);
         }
         case "createUser": {
+            // TODO  validate non-emptyness of name
             // TODO  validate email address and password
-            // TODO  validate (unicity of) publicId?
             return (identities.userByEmailAddress(command.emailAddress) === undefined)
                 ? success({
                         eventType: "createUser",
                         id: v4(),
                         timestamp: now(),
                         name: command.name,
-                        publicId: command.publicId,
                         emailAddress: command.emailAddress,
                         hashedPassword: "salt$" + command.password    // TODO  really hash it
                     } as ICreateUserEvent)

@@ -11,7 +11,6 @@ export /* abstract */ interface IEvent {
 export /* abstract */ interface ICreateIdentityEvent extends IEvent {
     id: string;
     name: string;
-    publicId: any;
 }
 
 export interface ICreateUserEvent extends ICreateIdentityEvent {
@@ -28,6 +27,5 @@ export interface IAddIdentityToGroupEvent extends IEvent {
     eventType: "addIdentityToGroup";
     groupId: string;
     memberId: string;
-    asAdmin: boolean;
 }
 

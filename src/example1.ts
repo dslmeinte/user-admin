@@ -8,8 +8,7 @@ const identities: Identities = new Identities();
 processCommand(identities, {
         commandType: "addIdentityToGroup",
         groupId: "1",
-        memberId: "2",
-        asAdmin: true
+        memberId: "2"
     } as IAddIdentityToGroupCommand)
     .then(result => {
         console.dir(result.errorMessages);
@@ -17,10 +16,8 @@ processCommand(identities, {
     .then(() => processCommand(identities, {
             commandType: "createUser",
             name: "Meinte",
-            description: "allround software value creator",
             emailAddress: "meinte.boersma@gmail.com",
-            password: "hash brown horse battery staple",
-            publicId: "some OpenID string"
+            password: "hash brown horse battery staple"
         } as ICreateUserCommand)
     )
     .then(result => {

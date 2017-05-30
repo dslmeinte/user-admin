@@ -12,8 +12,6 @@ export interface IIdentity {
     id: string;
     identityType: IdentityType;
     name: string;
-    publicId: any;
-    permissions: { [permissionId: string]: any };
 }
 
 
@@ -44,7 +42,7 @@ export class Identities {
     processEvent(event: Event): void {
         switch (event.eventType) {
             case "addIdentityToGroup": {
-                (this.identities[event.groupId] as IGroup).members[event.memberId] = event.asAdmin;
+                (this.identities[event.groupId] as IGroup).members[event.memberId] = true;
                 break;
             }
             case "createGroup": {
@@ -52,8 +50,6 @@ export class Identities {
                     id: event.id,
                     identityType: "group",
                     name: event.name,
-                    publicId: event.publicId,
-                    permissions: {},
                     members: {}
                 };
                 this.identities[event.id] = group;
@@ -64,10 +60,8 @@ export class Identities {
                     id: event.id,
                     identityType: "user",
                     name: event.name,
-                    publicId: event.publicId,
                     emailAddress: event.emailAddress,
-                    hashedPassword: event.hashedPassword,
-                    permissions: {}
+                    hashedPassword: event.hashedPassword
                 };
                 this.identities[event.id] = user;
                 break;
