@@ -37,7 +37,7 @@ export class IdentitiesStore {
                     identityType: "user",
                     name: event.name,
                     emailAddress: event.emailAddress,
-                    hashedPassword: event.hashedPassword,
+                    hashedPassword: event.encryptedPassword,
                     state: {
                         userStateType: "confirmEmailAddress",
                         token: v4()

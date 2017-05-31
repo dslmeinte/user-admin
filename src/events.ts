@@ -22,7 +22,7 @@ export /* abstract */ interface ICreateIdentityEvent extends IEvent {
 export interface ICreateUserEvent extends ICreateIdentityEvent {
     eventType: "createdUser";
     emailAddress: string;
-    hashedPassword: string;
+    encryptedPassword: string;
 }
 
 export interface ICreateGroupEvent extends ICreateIdentityEvent {
