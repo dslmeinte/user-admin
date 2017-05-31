@@ -1,9 +1,9 @@
-import {commandProcessor} from "../commands";
-import {IAddIdentityToGroupCommand, ICreateUserCommand} from "../commands";
-import {Identities} from "../identities";
+import {commandProcessor} from "../commands/processor";
+import {IAddIdentityToGroupCommand, ICreateUserCommand} from "../commands/definitions";
+import {IdentitiesStore} from "../identities/store";
 
-const identities: Identities = new Identities();
-const processCommand = commandProcessor(identities);
+const identitiesStore: IdentitiesStore = new IdentitiesStore();
+const processCommand = commandProcessor(identitiesStore);
 
 processCommand({
         commandType: "addIdentityToGroup",
@@ -21,7 +21,7 @@ processCommand({
         } as ICreateUserCommand)
     )
     .then(event => {
-        identities.processEvent(event);
-        console.dir(identities);
+        identitiesStore.processEvent(event);
+        console.dir(identitiesStore);
     });
 

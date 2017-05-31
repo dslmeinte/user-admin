@@ -1,35 +1,11 @@
 import {keys, values} from "lodash";
+import {v4} from "uuid";
 
-import {Event} from "./events";
-
-
-export type IdentityType = "user" | "group";
-
-export type Identity = IUser | IGroup;
+import {Event} from "../events";
+import {IGroup, IUser, Identity} from "./definitions";
 
 
-export interface IIdentity {
-    id: string;
-    identityType: IdentityType;
-    name: string;
-}
-
-
-export interface IUser extends IIdentity {
-    identityType: "user";
-    emailAddress: string;
-    hashedPassword: string;
-}
-
-
-export interface IGroup extends IIdentity {
-    identityType: "group";
-    members: { [memberId: string]: boolean };
-}
-
-
-
-export class Identities {
+export class IdentitiesStore {
 
     private identities: { [id: string]: Identity } = {};
 
@@ -41,11 +17,11 @@ export class Identities {
 
     processEvent(event: Event): void {
         switch (event.eventType) {
-            case "addIdentityToGroup": {
+            case "addedIdentityToGroup": {
                 (this.identities[event.groupId] as IGroup).members[event.memberId] = true;
                 break;
             }
-            case "createGroup": {
+            case "createdGroup": {
                 const group: IGroup = {
                     id: event.id,
                     identityType: "group",
@@ -55,16 +31,25 @@ export class Identities {
                 this.identities[event.id] = group;
                 break;
             }
-            case "createUser": {
+            case "createdUser": {
                 const user: IUser = {
                     id: event.id,
                     identityType: "user",
                     name: event.name,
                     emailAddress: event.emailAddress,
-                    hashedPassword: event.hashedPassword
+                    hashedPassword: event.hashedPassword,
+                    state: {
+                        userStateType: "confirmEmailAddress",
+                        token: v4()
+                    }
                 };
                 this.identities[event.id] = user;
                 break;
+            }
+            case "emailAddressConfirmed": {
+                (this.identities[event.userId] as IUser).state = {
+                    userStateType: "active"
+                };
             }
         }
     }

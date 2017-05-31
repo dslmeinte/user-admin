@@ -1,11 +1,17 @@
-export type EventType = "createUser" | "createGroup" | "deleteIdentity" | "addIdentityToGroup";
+export type EventType = "addedIdentityToGroup" | "createdUser" | "createdGroup" | "emailAddressConfirmed";
 
-export type Event = ICreateUserEvent | ICreateGroupEvent | IAddIdentityToGroupEvent;
+export type Event = IAddIdentityToGroupEvent | ICreateUserEvent | ICreateGroupEvent | IEmailAddressConfirmedEvent;
 
 
 export /* abstract */ interface IEvent {
     eventType: EventType;
     timestamp: Date;
+}
+
+export interface IAddIdentityToGroupEvent extends IEvent {
+    eventType: "addedIdentityToGroup";
+    groupId: string;
+    memberId: string;
 }
 
 export /* abstract */ interface ICreateIdentityEvent extends IEvent {
@@ -14,18 +20,17 @@ export /* abstract */ interface ICreateIdentityEvent extends IEvent {
 }
 
 export interface ICreateUserEvent extends ICreateIdentityEvent {
-    eventType: "createUser";
+    eventType: "createdUser";
     emailAddress: string;
     hashedPassword: string;
 }
 
 export interface ICreateGroupEvent extends ICreateIdentityEvent {
-    eventType: "createGroup";
+    eventType: "createdGroup";
 }
 
-export interface IAddIdentityToGroupEvent extends IEvent {
-    eventType: "addIdentityToGroup";
-    groupId: string;
-    memberId: string;
+export interface IEmailAddressConfirmedEvent extends IEvent {
+    eventType: "emailAddressConfirmed";
+    userId: string;
 }
 
