@@ -33,3 +33,5 @@ The *views* are: identities, including permissions, and the events itself to see
 It lacks many, many details and features but will grow over time.
 I'll try to add "complete" features, in the sense that they don't leave new TODOs behind.
 
+Note that, where type hierarchies are concerned, I tend to keep and process these in alphanumeric order of their names.
+

@@ -1,8 +1,8 @@
 import {Identity} from "./identities/definitions";
 
-export type EventType = "addedIdentityToGroup" | "createdUser" | "createdGroup" | "emailAddressConfirmed" | "identityUpdated" | "userAuthenticated";
+export type EventType = "identityAddedToGroup" | "userCreated" | "groupCreated" | "emailAddressConfirmed" | "identityUpdated" | "userAuthenticated";
 
-export type Event = IAddIdentityToGroupEvent | ICreateUserEvent | ICreateGroupEvent | IEmailAddressConfirmedEvent | IIdentityUpdatedEvent | IUserAuthenticatedEvent;
+export type Event = IEmailAddressConfirmedEvent | IGroupCreatedEvent | IIdentityAddedToGroupEvent | IIdentityUpdatedEvent | IUserAuthenticatedEvent | IUserCreatedEvent;
 
 
 export /* abstract */ interface IEvent {
@@ -10,30 +10,24 @@ export /* abstract */ interface IEvent {
     timestamp: Date;
 }
 
-export interface IAddIdentityToGroupEvent extends IEvent {
-    eventType: "addedIdentityToGroup";
-    groupId: string;
-    memberId: string;
-}
-
-export /* abstract */ interface ICreateIdentityEvent extends IEvent {
+export /* abstract */ interface IIdentityCreatedEvent extends IEvent {
     id: string;
     name: string;
-}
-
-export interface ICreateUserEvent extends ICreateIdentityEvent {
-    eventType: "createdUser";
-    emailAddress: string;
-    encryptedPassword: string;
-}
-
-export interface ICreateGroupEvent extends ICreateIdentityEvent {
-    eventType: "createdGroup";
 }
 
 export interface IEmailAddressConfirmedEvent extends IEvent {
     eventType: "emailAddressConfirmed";
     userId: string;
+}
+
+export interface IGroupCreatedEvent extends IIdentityCreatedEvent {
+    eventType: "groupCreated";
+}
+
+export interface IIdentityAddedToGroupEvent extends IEvent {
+    eventType: "identityAddedToGroup";
+    groupId: string;
+    memberId: string;
 }
 
 export interface IIdentityUpdatedEvent extends IEvent {
@@ -45,5 +39,11 @@ export interface IIdentityUpdatedEvent extends IEvent {
 export interface IUserAuthenticatedEvent extends IEvent {
     eventType: "userAuthenticated";
     userId: string;
+}
+
+export interface IUserCreatedEvent extends IIdentityCreatedEvent {
+    eventType: "userCreated";
+    emailAddress: string;
+    encryptedPassword: string;
 }
 

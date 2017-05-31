@@ -17,11 +17,12 @@ export class IdentitiesStore {
 
     processEvent(event: Event): void {
         switch (event.eventType) {
-            case "addedIdentityToGroup": {
-                (this.identities[event.groupId] as IGroup).members[event.memberId] = true;
-                break;
+            case "emailAddressConfirmed": {
+                (this.identities[event.userId] as IUser).state = {
+                    userStateType: "active"
+                };break;
             }
-            case "createdGroup": {
+            case "groupCreated": {
                 const group: IGroup = {
                     id: event.id,
                     identityType: "group",
@@ -31,7 +32,20 @@ export class IdentitiesStore {
                 this.identities[event.id] = group;
                 break;
             }
-            case "createdUser": {
+            case "identityAddedToGroup": {
+                (this.identities[event.groupId] as IGroup).members[event.memberId] = true;
+                break;
+            }
+            case "identityUpdated": {
+                const identity = this.identities[event.id]!;
+                this.identities[event.id] = { ...identity, ...event.data } as Identity;
+                break;
+            }
+            case "userAuthenticated": {
+                // do nothing: event serves as paper trail
+                break;
+            }
+            case "userCreated": {
                 const user: IUser = {
                     id: event.id,
                     identityType: "user",
@@ -44,20 +58,6 @@ export class IdentitiesStore {
                     }
                 };
                 this.identities[event.id] = user;
-                break;
-            }
-            case "emailAddressConfirmed": {
-                (this.identities[event.userId] as IUser).state = {
-                    userStateType: "active"
-                };break;
-            }
-            case "identityUpdated": {
-                const identity = this.identities[event.id]!;
-                this.identities[event.id] = { ...identity, ...event.data } as Identity;
-                break;
-            }
-            case "userAuthenticated": {
-                // do nothing: event serves as paper trail
                 break;
             }
         }

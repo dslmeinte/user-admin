@@ -57,11 +57,11 @@ export function commandProcessor(identitiesStore: IdentitiesStore): (command: de
                     return Promise.reject("circularity not permitted");
                 }
                 return Promise.resolve({
-                        eventType: "addedIdentityToGroup",
+                        eventType: "identityAddedToGroup",
                         timestamp: now(),
                         groupId: command.groupId,
                         memberId: command.memberId
-                    } as events.IAddIdentityToGroupEvent);
+                    } as events.IIdentityAddedToGroupEvent);
             }
             case "confirmEmailAddress": {
                 const user = identitiesStore.userByEmailAddress(command.emailAddress);
@@ -85,11 +85,11 @@ export function commandProcessor(identitiesStore: IdentitiesStore): (command: de
                 return isEmpty(command.name)
                     ? Promise.reject("name not valid")
                     : Promise.resolve({
-                            eventType: "createdGroup",
+                            eventType: "groupCreated",
                             id: v4(),
                             timestamp: now(),
                             name: command.name
-                        } as events.ICreateGroupEvent)
+                        } as events.IGroupCreatedEvent)
                     ;
             }
             case "createUser": {
@@ -110,13 +110,13 @@ export function commandProcessor(identitiesStore: IdentitiesStore): (command: de
                     return Promise.reject("email address not valid");
                 }
                 return Promise.resolve({
-                        eventType: "createdUser",
+                        eventType: "userCreated",
                         id: v4(),
                         timestamp: now(),
                         name: command.name,
                         emailAddress: command.emailAddress,
                         encryptedPassword: generate(command.password)
-                    } as events.ICreateUserEvent);
+                    } as events.IUserCreatedEvent);
             }
             case "requestPasswordChange": {
                 const user = identitiesStore.userByEmailAddress(command.emailAddress);
