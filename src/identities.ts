@@ -1,4 +1,4 @@
-import {keys} from "lodash";
+import {keys, values} from "lodash";
 
 import {Event} from "./events";
 
@@ -100,6 +100,10 @@ export class Identities {
         return keys(self.identities).some(inCycle);
     }
     // TODO  unit test this...
+
+    serialise(): Identity[] {
+        return values(this.identities);
+    }
 
 }
 

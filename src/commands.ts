@@ -1,6 +1,8 @@
 import {isObject, isString} from "lodash";
+import {v4} from "uuid";
 
-import {EventType} from "./events";
+import {Event, EventType, IAddIdentityToGroupEvent, ICreateGroupEvent, ICreateUserEvent} from "./events";
+import {Identities} from "./identities";
 
 
 export type Command = ICreateUserCommand | ICreateGroupCommand | IAddIdentityToGroupCommand;
@@ -81,4 +83,72 @@ export function validateSyntax(command: any): string[] {
 }
 
 // TODO  replace with JSON Schema check
+
+
+function now() {
+    return new Date();
+}
+
+
+export function commandProcessor(identities: Identities): (command: Command) => Promise<Event> {
+    return command => {
+        // TODO  handle error situation through promise
+        // TODO  syntax of command should already have happened at this point
+        const syntaxIssues = validateSyntax(command);
+        if (syntaxIssues.length > 0) {
+            return Promise.reject(syntaxIssues);
+        }
+        switch (command.commandType) {
+            case "addIdentityToGroup": {
+                const group = identities.byId(command.groupId);
+                const member = identities.byId(command.memberId);
+                if (group === undefined || group.identityType !== "group") {
+                    return Promise.reject("group does not exist");
+                }
+                if (member === undefined) {
+                    return Promise.reject("member does not exists");
+                }
+                if (member.id in group.members) {
+                    return Promise.reject("member already in group");
+                }
+                if (identities.circularAfterAdding(group.id, member.id)) {
+                    return Promise.reject("circularity not permitted");
+                }
+                return Promise.resolve({
+                        eventType: "addIdentityToGroup",
+                        timestamp: now(),
+                        groupId: command.groupId,
+                        memberId: command.memberId
+                    } as IAddIdentityToGroupEvent);
+            }
+            case "createGroup": {
+                // TODO  validate non-emptyness of name
+                return Promise.resolve({
+                        eventType: "createGroup",
+                        id: v4(),
+                        timestamp: now(),
+                        name: command.name
+                    } as ICreateGroupEvent);
+            }
+            case "createUser": {
+                // TODO  validate non-emptyness of name
+                // TODO  validate email address and password
+                return (identities.userByEmailAddress(command.emailAddress) === undefined)
+                    ? Promise.resolve({
+                            eventType: "createUser",
+                            id: v4(),
+                            timestamp: now(),
+                            name: command.name,
+                            emailAddress: command.emailAddress,
+                            hashedPassword: "salt$" + command.password    // TODO  really hash it
+                        } as ICreateUserEvent)
+                    : Promise.reject("user with that email address already exists");
+            }
+            /*
+            * Note: if TypeScript insists on a default case, you've missed a case!
+            * Conversely, `command` should have type `never` in the default case.
+            */
+        }
+    };
+}
 
