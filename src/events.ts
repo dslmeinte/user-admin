@@ -1,6 +1,8 @@
-export type EventType = "addedIdentityToGroup" | "createdUser" | "createdGroup" | "emailAddressConfirmed";
+import {Identity} from "./identities/definitions";
 
-export type Event = IAddIdentityToGroupEvent | ICreateUserEvent | ICreateGroupEvent | IEmailAddressConfirmedEvent;
+export type EventType = "addedIdentityToGroup" | "createdUser" | "createdGroup" | "emailAddressConfirmed" | "identityUpdated" | "userAuthenticated";
+
+export type Event = IAddIdentityToGroupEvent | ICreateUserEvent | ICreateGroupEvent | IEmailAddressConfirmedEvent | IIdentityUpdatedEvent | IUserAuthenticatedEvent;
 
 
 export /* abstract */ interface IEvent {
@@ -31,6 +33,17 @@ export interface ICreateGroupEvent extends ICreateIdentityEvent {
 
 export interface IEmailAddressConfirmedEvent extends IEvent {
     eventType: "emailAddressConfirmed";
+    userId: string;
+}
+
+export interface IIdentityUpdatedEvent extends IEvent {
+    eventType: "identityUpdated";
+    id: string;
+    data: Partial<Identity>;
+}
+
+export interface IUserAuthenticatedEvent extends IEvent {
+    eventType: "userAuthenticated";
     userId: string;
 }
 

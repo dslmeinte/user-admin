@@ -13,17 +13,21 @@ export interface IIdentity {
 export interface IUser extends IIdentity {
     identityType: "user";
     emailAddress: string;
-    hashedPassword: string;
+    encryptedPassword: string;
     state: UserState;
 }
 
 
-export type UserStateType = "active" | "confirmEmailAddress";
+export type UserStateType = "active" | "confirmEmailAddress" | "passwordChangeRequested";
 
-export type UserState = IActiveUserState | IConfirmEmailAddressUserState;
+export type UserState = IActiveUserState | IConfirmEmailAddressUserState | IPasswordChangeRequestedUserState;
 
 export interface IUserState {
     userStateType: UserStateType;
+}
+
+export interface IActiveUserState extends IUserState {
+    userStateType: "active";
 }
 
 export interface IConfirmEmailAddressUserState extends IUserState {
@@ -31,8 +35,9 @@ export interface IConfirmEmailAddressUserState extends IUserState {
     token: string;
 }
 
-export interface IActiveUserState extends IUserState {
-    userStateType: "active";
+export interface IPasswordChangeRequestedUserState extends IUserState {
+    userStateType: "passwordChangeRequested";
+    token: string;
 }
 
 

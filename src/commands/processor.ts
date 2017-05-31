@@ -1,9 +1,10 @@
 import {validate as isValidEmail} from "email-validator";
-import {generate} from "password-hash";
+import {generate, verify} from "password-hash";
 import {v4} from "uuid";
 const ValidatePassword = require("validate-password");
 
 import * as events from "../events";
+import {IPasswordChangeRequestedUserState} from "../identities/definitions";
 import {IdentitiesStore} from "../identities/store";
 import * as defs from "./definitions";
 import {validateSyntax} from "./validator";
@@ -23,6 +24,23 @@ export function commandProcessor(identitiesStore: IdentitiesStore): (command: de
         }
 
         switch (command.commandType) {
+            case "authenticateUser": {
+                const user = identitiesStore.userByEmailAddress(command.emailAddress);
+                if (user === undefined) {
+                    return Promise.reject("email address not known");
+                }
+                if (user.state.userStateType !== "active") {
+                    return Promise.reject("user not active");
+                }
+                if (!verify(command.password, user.encryptedPassword)) {
+                    return Promise.reject("password not valid");
+                }
+                return Promise.resolve({
+                    eventType: "userAuthenticated",
+                    timestamp: now(),
+                    userId: user.id
+                } as events.IUserAuthenticatedEvent);
+            }
             case "addIdentityToGroup": {
                 const group = identitiesStore.byId(command.groupId);
                 const member = identitiesStore.byId(command.memberId);
@@ -99,6 +117,26 @@ export function commandProcessor(identitiesStore: IdentitiesStore): (command: de
                         emailAddress: command.emailAddress,
                         encryptedPassword: generate(command.password)
                     } as events.ICreateUserEvent);
+            }
+            case "requestPasswordChange": {
+                const user = identitiesStore.userByEmailAddress(command.emailAddress);
+                if (user === undefined) {
+                    return Promise.reject("email address not known");
+                }
+                if (user.state.userStateType !== "active") {
+                    return Promise.reject("user not active");
+                }
+                return Promise.resolve({
+                        eventType: "identityUpdated",
+                        timestamp: now(),
+                        id: user.id,
+                        data: {
+                            state: {
+                                userStateType: "passwordChangeRequested",
+                                token: v4()
+                            } as IPasswordChangeRequestedUserState
+                        }
+                    } as events.IIdentityUpdatedEvent);
             }
             /*
             * Note: if TypeScript insists on a default case, you've missed a case!

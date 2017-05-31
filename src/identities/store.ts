@@ -37,7 +37,7 @@ export class IdentitiesStore {
                     identityType: "user",
                     name: event.name,
                     emailAddress: event.emailAddress,
-                    hashedPassword: event.encryptedPassword,
+                    encryptedPassword: event.encryptedPassword,
                     state: {
                         userStateType: "confirmEmailAddress",
                         token: v4()
@@ -49,7 +49,16 @@ export class IdentitiesStore {
             case "emailAddressConfirmed": {
                 (this.identities[event.userId] as IUser).state = {
                     userStateType: "active"
-                };
+                };break;
+            }
+            case "identityUpdated": {
+                const identity = this.identities[event.id]!;
+                this.identities[event.id] = { ...identity, ...event.data } as Identity;
+                break;
+            }
+            case "userAuthenticated": {
+                // do nothing: event serves as paper trail
+                break;
             }
         }
     }

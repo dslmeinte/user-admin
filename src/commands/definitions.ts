@@ -1,6 +1,6 @@
-export type Command = IConfirmEmailAddressCommand | ICreateUserCommand | ICreateGroupCommand | IAddIdentityToGroupCommand;
+export type Command = IAddIdentityToGroupCommand | IAuthenticateUserCommand | IConfirmEmailAddressCommand | ICreateUserCommand | ICreateGroupCommand | IRequestPasswordChange;
 
-export type CommandType = "confirmEmailAddress" | "createUser" | "createGroup" | "addIdentityToGroup";
+export type CommandType = "addIdentityToGroup" | "authenticateUser" | "confirmEmailAddress" | "createUser" | "createGroup" | "requestPasswordChange";
 
 
 export /* abstract */ interface ICommand {
@@ -33,6 +33,14 @@ export interface ICreateUserCommand extends ICreateIdentityCommand {
     password: string;
 }
 
+export interface IAuthenticateUserCommand extends ICommand {
+    commandType: "authenticateUser";
+    emailAddress: string;
+    password: string;
+}
 
-// TODO  turn into classes since TS's switch-statement is sufficiently Xtend-like
+export interface IRequestPasswordChange extends ICommand {
+    commandType: "requestPasswordChange";
+    emailAddress: string;
+}
 
