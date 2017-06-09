@@ -60,7 +60,7 @@ describe("commands processor", () => {
             .then(done, done);
     });
 
-    it("should process the test commands without errors", done => {
+    it("should process some test commands without errors", done => {
         const commands: commands.Command[] = require("../../data/test-commands.json");
         Promise.all(commands.map(processCommand))
             .then(events => {

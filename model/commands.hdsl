@@ -1,0 +1,36 @@
+destination "commands/definitions"
+
+hierarchy command as-postfix {
+
+    addIdentityToGroup {
+        groupId: string
+        memberId: string
+    }
+
+    confirmEmailAddress {
+        emailAddress: string
+        token: string
+    }
+
+    abstract createIdentity {
+        name: string
+    }
+
+    createGroup < createIdentity {}
+
+    createUser < createIdentity {
+        emailAddress: string
+        password: string
+    }
+
+    authenticateUser {
+        emailAddress: string
+        password: string
+    }
+
+    requestPasswordChange {
+        emailAddress: string
+    }
+
+}
+

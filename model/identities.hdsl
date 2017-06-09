@@ -1,0 +1,34 @@
+destination "identities/definitions"
+
+hierarchy identity {
+
+    id: string
+    name: string
+
+    user {
+        emailAddress: string
+        encryptedPassword: string
+        state: userState
+    }
+
+    group {
+        members: memberId -> boolean
+    }
+
+}
+
+
+hierarchy userState as-postfix {
+
+    active {}
+
+    confirmEmailAddress {
+        token: string
+    }
+
+    passwordChangeRequested {
+        token: string
+    }
+
+}
+
