@@ -1,6 +1,6 @@
 destination "commands/definitions"
 
-hierarchy command as-postfix {
+hierarchy Command as-postfix {
 
     addIdentityToGroup {
         groupId: string

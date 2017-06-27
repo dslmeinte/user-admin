@@ -17,7 +17,7 @@ const passwordValidator = new ValidatePassword();
 
 export function commandProcessor(identitiesStore: IdentitiesStore): (command: defs.Command) => Promise<events.Event> {
     return command => {
-        // TODO  syntax of command should already have happened at this point
+        // TODO  syntax validation of command should already have happened at this point
         const syntaxIssues = validateSyntax(command);
         if (syntaxIssues.length > 0) {
             return Promise.reject(syntaxIssues);

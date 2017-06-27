@@ -1,6 +1,6 @@
 destination "identities/definitions"
 
-hierarchy identity {
+hierarchy Identity {
 
     id: string
     name: string
@@ -18,7 +18,7 @@ hierarchy identity {
 }
 
 
-hierarchy userState as-postfix {
+hierarchy UserState as-postfix {
 
     active {}
 

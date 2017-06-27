@@ -7,6 +7,10 @@ The implementation currently has the following characteristics:
 * It is written TypeScript.
 * It is incomplete.
 
+It is not intended to be "complete" in any sense at any time.
+More specifically, it is not intended to be a drop-in solution, but rather as something to fork and adapt to your own specific set of requirements.
+That should be easy because of the use of CQRS.
+
 
 ## Model
 

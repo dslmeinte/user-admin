@@ -1,6 +1,6 @@
 destination "events"
 
-hierarchy event as-postfix {
+hierarchy Event as-postfix {
 
     timestamp: date
 
@@ -22,7 +22,7 @@ hierarchy event as-postfix {
 
     identityUpdated {
         id: string
-        data: partial identity
+        data: partial Identity
     }
 
     userAuthenticated {

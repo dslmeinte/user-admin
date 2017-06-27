@@ -2,5 +2,6 @@
 /dist/
 /node_modules/
 /npm-debug.log
+/src/**/*.json
 /yarn-error.log
 /yarn.lock
