@@ -8,7 +8,7 @@ hierarchy Identity {
     user {
         emailAddress: string
         encryptedPassword: string
-        state: userState
+        state: UserState
     }
 
     group {
