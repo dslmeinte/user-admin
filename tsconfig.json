@@ -1,5 +1,5 @@
 {
-    "version": "2.3.3",
+    "version": "3.5.3",
     "compilerOptions": {
         "declaration": false,
         "experimentalDecorators": true,

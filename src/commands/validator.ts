@@ -1,4 +1,4 @@
-import {isObject, isString} from "lodash";
+import {isString} from "lodash";
 
 import * as defs from "./definitions";
 
@@ -19,34 +19,30 @@ export function validateSyntax(command: any): string[] {
         }
     }
 
-    if (isObject(issues)) {
-        switch (command.commandType) {
-            case "addIdentityToGroup": {
-                checkString<defs.IAddIdentityToGroupCommand>("groupId");
-                checkString<defs.IAddIdentityToGroupCommand>("memberId");
-                break;
-            }
-            case "confirmEmailAddress": {
-                checkString<defs.IConfirmEmailAddressCommand>("emailAddress");
-                checkString<defs.IConfirmEmailAddressCommand>("token");
-                break;
-            }
-            case "createGroup": {
-                checkString<defs.ICreateGroupCommand>("name");
-                break;
-            }
-            case "createUser": {
-                checkString<defs.ICreateUserCommand>("name");
-                checkString<defs.ICreateUserCommand>("emailAddress");
-                checkString<defs.ICreateUserCommand>("password");
-                break;
-            }
-            default: {
-                issues.push("'commandType' not valid");
-            }
+    switch (command.commandType) {
+        case "addIdentityToGroup": {
+            checkString<defs.IAddIdentityToGroupCommand>("groupId");
+            checkString<defs.IAddIdentityToGroupCommand>("memberId");
+            break;
         }
-    } else {
-        issues.push("not an object");
+        case "confirmEmailAddress": {
+            checkString<defs.IConfirmEmailAddressCommand>("emailAddress");
+            checkString<defs.IConfirmEmailAddressCommand>("token");
+            break;
+        }
+        case "createGroup": {
+            checkString<defs.ICreateGroupCommand>("name");
+            break;
+        }
+        case "createUser": {
+            checkString<defs.ICreateUserCommand>("name");
+            checkString<defs.ICreateUserCommand>("emailAddress");
+            checkString<defs.ICreateUserCommand>("password");
+            break;
+        }
+        default: {
+            issues.push("'commandType' not valid");
+        }
     }
 
     return issues;
