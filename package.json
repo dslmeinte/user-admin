@@ -27,7 +27,7 @@
     "@types/chai": "^4.2.0",
     "@types/email-validator": "^1.0.6",
     "@types/lodash": "^4.14.136",
-    "@types/mocha": "^5.2.7",
+    "@types/mocha": "^7.0.1",
     "@types/password-hash": "^1.2.20",
     "@types/uuid": "^3.4.5",
     "chai": "^4.2.0",
