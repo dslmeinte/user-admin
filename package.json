@@ -20,7 +20,7 @@
     "email-validator": "^2.0.4",
     "lodash": "^4.17.15",
     "password-hash": "^1.2.2",
-    "uuid": "^3.3.2",
+    "uuid": "^7.0.0",
     "validate-password": "^1.0.4"
   },
   "devDependencies": {
